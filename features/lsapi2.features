@@ -1,0 +1,56 @@
+Feature: LinkShare API Testing for NewProducts Model
+
+Scenario: Verify Class Structure and Methods
+	Given I instantiate "LinkShareAPI" with debug "True"
+	Class should contain "FetchHTTP" method
+	Class should contain "ProcessData" method
+	Class should contain "SetParameter" method
+	Class should contain "SetURL" method
+	Class should contain "_http_geturl_log" method
+	Class should contain "_http_response_log" method
+	Class should contain "_http_errors_log" method
+
+Scenario: Verify the class structure attributes
+	Directory "BASE_API_LOGDIR" must exist
+	Class should contain "token"
+	Class should contain "submiturl"
+	Class should contain "urldata_dict"
+	Class should contain "product_results"
+	Class should contain "debug"
+
+	Variable "submiturl" should be "http://productsearch.linksynergy.com/productsearch?"
+
+	The "urldata_dict" dictionary should contain "keyword" key
+	The "urldata_dict" dictionary should contain "mid" key
+	The "urldata_dict" dictionary should contain "page" key
+	The "urldata_dict" dictionary should contain "MaxResults" key
+	The "urldata_dict" dictionary should contain "sorttype" key
+	The "urldata_dict" dictionary should contain "sort" key
+	
+	I set "MaxResults" to "100"
+
+Scenario: Test URL Data fetching
+	Then I search for "nike shoes"
+	Then I fetch the data which constructs the url
+	THen I process the parsed XML and return data
+	Then I should have logfile "LS_API_HTTPGET_LOG"
+	Then I should have logfile "LS_API_HTTPRESPONSE_LOG"
+	Then I should have logfile "LS_API_HTTPERRORS_LOG"
+
+
+Scenario: Finalization
+	The results list should have atleast one result
+	The results dict should contain "merchantname" key
+	The results dict should contain "linkid" key
+	The results dict should contain "productname" key
+	The results dict should contain "category_pri" key
+	The results dict should contain "category_sec" key
+	The results dict should contain "price" key
+	The results dict should contain "description_short" key
+	The results dict should contain "description_long" key
+	The results dict should contain "keywords" key
+	The results dict should contain "linkurl" key
+	The results dict should contain "imgurl" key
+	The results dict should contain "sku" key
+	The results dict should contain "upccode" key
+
